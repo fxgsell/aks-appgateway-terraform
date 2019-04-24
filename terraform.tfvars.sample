@@ -1,0 +1,17 @@
+subscription = "<YOUR SUBSCRIPTION>"
+
+client_id = "<CLIENT ID OF THE SP FOR AKS>"
+
+client_secret = "<CLIENT SECRET OF THE SP FOR AKS>"
+
+location = "Southeast Asia"
+
+dns_prefix = "aks-ssl"
+
+cluster_name = "k8s-ssl"
+
+ssh_public_key = "~/.ssh/id_rsa.pub"
+
+agent_count = 3
+
+

@@ -3,9 +3,6 @@
 * Terraform installed where you run this.
 * Create a service principal allowed to create all the resources needed for terraform.
 * Copy `terraform.tfvars.sample` to `terraform.tfvars` and update the missing values with those from the above service principal.
-* Create a user managed identity and get:
-    - clientID
-    - resourceID
 
 ## How to use
 1. Run `terraform init` to configure the prerequisites

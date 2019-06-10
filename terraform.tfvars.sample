@@ -4,6 +4,8 @@ client_id = "<CLIENT ID OF THE SP FOR AKS>"
 
 client_secret = "<CLIENT SECRET OF THE SP FOR AKS>"
 
+tenant_id = "<TENANT ID OF YOUR AZURE AD>"
+
 location = "Southeast Asia"
 
 dns_prefix = "aks-ssl"
@@ -14,4 +16,12 @@ ssh_public_key = "~/.ssh/id_rsa.pub"
 
 agent_count = 3
 
+kub_version = "1.14.0"
 
+helm_repo = "<YOUR HELM REPO FOR aad-pod-identity>"
+
+helm_url = "<HELM REPO URL>"
+
+helm_username = "<HELM REPO USERNAME>"
+
+helm_password = "HELM REPO PASSWORD>"

@@ -34,10 +34,11 @@ resource "kubernetes_cluster_role_binding" "tiller" {
 }
 
 resource "azurerm_kubernetes_cluster" "k8s" {
-  name                = "${random_pet.cluster.keepers.cluster_name}"
+  name                = "${random_pet.cluster.id}"
   location            = "${var.location}"
   resource_group_name = "${azurerm_resource_group.k8s.name}"
   dns_prefix          = "${random_pet.cluster.id}"
+  kubernetes_version  = "${var.kub_version}"
 
   linux_profile {
     admin_username = "ubuntu"

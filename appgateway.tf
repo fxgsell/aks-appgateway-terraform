@@ -12,12 +12,15 @@ resource "azurerm_subnet" "k8s_frontend" {
   resource_group_name  = "${azurerm_resource_group.k8s.name}"
   virtual_network_name = "${azurerm_virtual_network.k8s_vnet.name}"
   address_prefix       = "10.1.2.0/24"
+  service_endpoints    = [
+    "Microsoft.KeyVault",
+  ]
 }
 
 locals {
   backend_address_pool_name      = "${azurerm_virtual_network.k8s_vnet.name}-beap"
   frontend_port_name             = "${azurerm_virtual_network.k8s_vnet.name}-feport"
-  frontend_ip_configuration_name = "${azurerm_virtual_network.k8s_vnet.name}-feip"
+  frontend_ip_configuration_name = "${azurerm_virtual_network.k8s_vnet.name}-ip"
   http_setting_name              = "${azurerm_virtual_network.k8s_vnet.name}-be-htst"
   listener_name                  = "${azurerm_virtual_network.k8s_vnet.name}-httplstn"
   request_routing_rule_name      = "${azurerm_virtual_network.k8s_vnet.name}-rqrt"
@@ -34,7 +37,6 @@ resource "azurerm_application_gateway" "network" {
     tier     = "Standard_v2"
     capacity = 2
   }
-
 
   gateway_ip_configuration {
     name      = "my-gateway-ip-configuration"
@@ -78,4 +80,12 @@ resource "azurerm_application_gateway" "network" {
     backend_address_pool_name   = "${local.backend_address_pool_name}"
     backend_http_settings_name  = "${local.http_setting_name}"
   }
+}
+
+# Terraform must have Owner access to the resource group/subscription 
+resource "azurerm_role_assignment" "k8s-ingress" {
+  //scope                = "/subscriptions/${var.subscription}/resourceGroups/${random_pet.cluster.id}/providers/Microsoft.Network/applicationGateways/${random_pet.cluster.id}-appgateway"
+  scope                = "${azurerm_application_gateway.network.id}"
+  role_definition_name = "Contributor"
+  principal_id         = "${azurerm_user_assigned_identity.k8s.principal_id}"
 }

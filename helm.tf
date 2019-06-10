@@ -12,14 +12,16 @@ provider "helm" {
 }
 
 data "helm_repository" "chart_msi" {
-    name = "spv-charts"
-    url  = "https://charts.spvapi.no"
+    name = "${var.helm_repo}"
+    username = "${var.helm_username}"
+    password = "${var.helm_password}"
+    url  = "${var.helm_url}"
 }
 
 resource "helm_release" "aad-identity" {
   name       = "aad-release"
-  repository = "{data.helm_repository.chart_msi.metadata.0.name}"
-  chart      = "spv-charts/aad-pod-identity"
+  repository = "${data.helm_repository.chart_msi.metadata.0.name}"
+  chart      = "${data.helm_repository.chart_msi.metadata.0.name}/aad-pod-identity"
 
   set_string {
     name  = "azureIdentity.resourceID"
@@ -66,7 +68,8 @@ resource "helm_release" "appgateway_ingress" {
   }
   set_string {
     name  = "armAuth.identityResourceID"
-    value = "/subscriptions/${var.subscription}/resourceGroups/${azurerm_resource_group.k8s.name}/providers/Microsoft.ManagedIdentity/userAssignedIdentities/${azurerm_user_assigned_identity.k8s.name}"
+    //value = "/subscriptions/${var.subscription}/resourceGroups/${azurerm_resource_group.k8s.name}/providers/Microsoft.ManagedIdentity/userAssignedIdentities/${azurerm_user_assigned_identity.k8s.name}"
+    value = "${azurerm_user_assigned_identity.k8s.id}"
   }
   set_string {
     name  = "armAuth.identityClientID"
@@ -75,7 +78,7 @@ resource "helm_release" "appgateway_ingress" {
 
   set_string {
     name  = "aksClusterConfiguration.apiServerAddress"
-    value = "https://kubernetes:443"
+    value = "kubernetes"
   }
 
   set {

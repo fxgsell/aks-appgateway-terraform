@@ -1,10 +1,17 @@
 variable "client_secret" {}
 variable "client_id" {}
+variable "tenant_id" {}
 variable "subscription" {}
 variable "cluster_name" {}
 variable "ssh_public_key" {}
 variable "agent_count" {}
 variable "location" {}
+variable "kub_version" {}
+variable "helm_password" {}
+variable "helm_repo" {}
+variable "helm_url" {}
+variable "helm_username" {}
+
 
 provider "azurerm" {}
 resource "random_pet" "cluster" {
@@ -16,7 +23,7 @@ resource "random_pet" "cluster" {
 }
 
 resource "azurerm_resource_group" "k8s" {
-  name     = "${random_pet.cluster.id}"
+  name     = "aks-ssl-${random_pet.cluster.id}"
   location = "${var.location}"
 }
 
@@ -30,8 +37,8 @@ resource "azurerm_log_analytics_workspace" "k8s" {
 
 resource "azurerm_storage_account" "k8s_storage_account" {
   name                     = "${random_pet.cluster.id}"
-  resource_group_name      = "${azurerm_resource_group.k8s.name}"
   location                 = "${azurerm_resource_group.k8s.location}"
+  resource_group_name      = "${azurerm_resource_group.k8s.name}"
   account_tier             = "Standard"
   account_replication_type = "ZRS"
 }
@@ -50,10 +57,9 @@ resource "azurerm_subnet" "k8s_subnet" {
   address_prefix       = "10.1.1.0/24"
 }
 
-
 resource "azurerm_user_assigned_identity" "k8s" {
   resource_group_name = "${azurerm_resource_group.k8s.name}"
   location            = "${azurerm_resource_group.k8s.location}"
 
-  name = "${random_pet.cluster.keepers.cluster_name}-k8s"
+  name = "${random_pet.cluster.id}"
 }

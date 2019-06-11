@@ -13,8 +13,8 @@
 1. Run `kubectl apply -f demo_app/guestbook-all-in-one.yaml` to deploy the test application on the cluster.
 1. To add the SSL Ingress:
     1. Export an environement variable SECRET with the value for the name for you certificate.
-    1. Then run `kubectl create secret tls ${SECRET} --key ssl/private.key --cert ssl/certificate.crt`
     1. Export an environement variable DOMAIN with the domain name for your app.
+    1. Then run `kubectl create secret tls ${SECRET} --key ssl/private.key --cert ssl/certificate.crt`
     1. Create the Ingress by running `sed 's/__DOMAIN__/$(DOMAIN)/g; s/__SECRET__/$(SECRET)/g' demo_app/ssl-ing-guestbook.yaml | kubectl apply -f -`
 1. To add the Ingress without SSL:
     1. Run `kubectl apply -f demo_app/ing-guestbook.yaml` to deploy the Ingress.

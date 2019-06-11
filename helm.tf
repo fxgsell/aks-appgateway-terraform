@@ -44,7 +44,17 @@ data "helm_repository" "chart_agi" {
     url  = "https://azure.github.io/application-gateway-kubernetes-ingress/helm/"
 }
 
+resource "null_resource" "delay" {
+  provisioner "local-exec" {
+    command = "sleep 15"
+  }
+  triggers = {
+    "before" = "${helm_release.aad-identity.id}"
+  }
+}
+
 resource "helm_release" "appgateway_ingress" {
+  depends_on = ["null_resource.delay"]
   name       = "ingress-azure"
   repository = "{data.helm_repository.chart_agi.metadata.0.name}"
   chart      = "application-gateway-kubernetes-ingress/ingress-azure"

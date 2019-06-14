@@ -12,7 +12,6 @@ variable "helm_repo" {}
 variable "helm_url" {}
 variable "helm_username" {}
 
-
 provider "azurerm" {}
 resource "random_pet" "cluster" {
   keepers = {
@@ -33,14 +32,6 @@ resource "azurerm_log_analytics_workspace" "k8s" {
   resource_group_name = "${azurerm_resource_group.k8s.name}"
   sku                 = "PerGB2018"
   retention_in_days   = 30
-}
-
-resource "azurerm_storage_account" "k8s_storage_account" {
-  name                     = "${random_pet.cluster.id}"
-  location                 = "${azurerm_resource_group.k8s.location}"
-  resource_group_name      = "${azurerm_resource_group.k8s.name}"
-  account_tier             = "Standard"
-  account_replication_type = "ZRS"
 }
 
 resource "azurerm_virtual_network" "k8s_vnet" {

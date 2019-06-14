@@ -32,6 +32,12 @@ resource "azurerm_application_gateway" "network" {
   resource_group_name = "${azurerm_resource_group.k8s.name}"
   location            = "${azurerm_resource_group.k8s.location}"
 
+// Requires https://github.com/terraform-providers/terraform-provider-azurerm/pull/3648
+  identity {
+    type  = "UserAssigned"
+    identity_ids = ["${azurerm_user_assigned_identity.k8s.id}"]
+  }
+
   sku {
     name     = "Standard_v2"
     tier     = "Standard_v2"

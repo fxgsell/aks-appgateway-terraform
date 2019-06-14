@@ -24,4 +24,4 @@ helm_url = "<HELM REPO URL>"
 
 helm_username = "<HELM REPO USERNAME>"
 
-helm_password = "HELM REPO PASSWORD>"
+helm_password = "<HELM REPO PASSWORD>"
